@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 600" width="860" height="600" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="860" height="600" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">Sprint 1: Baseline and Tracing</text>
+  <text x="430" y="55" text-anchor="middle" font-size="12" fill="#64748b">LLMClient · OpenAI → Anthropic → local fallback · trace_generation (Langfuse)</text>
+  <line x1="60" y1="65" x2="800" y2="65" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- trace_run boundary -->
+  <rect x="68" y="74" width="724" height="188" rx="10" fill="none" stroke="#c4b5fd" stroke-width="1.8" stroke-dasharray="8,4"/>
+  <text x="86" y="90" font-size="10" fill="#7c3aed" font-weight="bold">trace_run("cli.baseline")</text>
+
+  <!-- CLI -->
+  <rect x="300" y="98" width="260" height="48" rx="10" fill="#3b82f6" stroke="#2563eb" stroke-width="2"/>
+  <text x="430" y="120" text-anchor="middle" font-size="13" font-weight="bold" fill="white">CLI: baseline --query "..."</text>
+  <text x="430" y="137" text-anchor="middle" font-size="10" fill="#bfdbfe">ResearchState · ResearchQuery</text>
+
+  <line x1="430" y1="146" x2="430" y2="172" stroke="#64748b" stroke-width="2" marker-end="url(#a1)"/>
+
+  <!-- trace_generation boundary -->
+  <rect x="188" y="172" width="484" height="78" rx="10" fill="none" stroke="#e9d5ff" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="204" y="186" font-size="9" fill="#7c3aed">trace_generation("llm.complete") — records: model · system_prompt · user_prompt · content · tokens · cost · provider_used</text>
+  <rect x="238" y="192" width="364" height="50" rx="8" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"/>
+  <text x="420" y="215" text-anchor="middle" font-size="13" font-weight="bold" fill="white">LLMClient.complete()</text>
+  <text x="420" y="232" text-anchor="middle" font-size="10" fill="#e9d5ff">provider_order: [openai, anthropic, local_fallback] · flush_traces() at end</text>
+
+  <!-- Fork -->
+  <line x1="318" y1="250" x2="162" y2="296" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+  <line x1="420" y1="250" x2="420" y2="296" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+  <line x1="522" y1="250" x2="678" y2="296" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+  <text x="164" y="284" font-size="9" fill="#64748b">1st try</text>
+  <text x="388" y="284" font-size="9" fill="#64748b">2nd (fallback)</text>
+  <text x="618" y="284" font-size="9" fill="#64748b">3rd (local)</text>
+
+  <!-- OpenAI -->
+  <rect x="68" y="296" width="188" height="80" rx="10" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <text x="162" y="320" text-anchor="middle" font-size="12" font-weight="bold" fill="white">OpenAI Provider</text>
+  <text x="162" y="338" text-anchor="middle" font-size="10" fill="#a7f3d0">client.responses.create()</text>
+  <text x="162" y="354" text-anchor="middle" font-size="10" fill="#a7f3d0">model: gpt-4o-mini</text>
+  <text x="162" y="370" text-anchor="middle" font-size="10" fill="#a7f3d0">OPENAI_API_KEY required</text>
+
+  <!-- Anthropic -->
+  <rect x="326" y="296" width="188" height="80" rx="10" fill="#0891b2" stroke="#0e7490" stroke-width="2"/>
+  <text x="420" y="320" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Anthropic Fallback</text>
+  <text x="420" y="338" text-anchor="middle" font-size="10" fill="#bae6fd">client.messages.create()</text>
+  <text x="420" y="354" text-anchor="middle" font-size="10" fill="#bae6fd">model: claude-3-5-haiku-latest</text>
+  <text x="420" y="370" text-anchor="middle" font-size="10" fill="#bae6fd">ANTHROPIC_API_KEY required</text>
+
+  <!-- Local fallback -->
+  <rect x="584" y="296" width="188" height="80" rx="10" fill="#d97706" stroke="#b45309" stroke-width="2"/>
+  <text x="678" y="320" text-anchor="middle" font-size="12" font-weight="bold" fill="white">Local Fallback</text>
+  <text x="678" y="338" text-anchor="middle" font-size="10" fill="#fde68a">_fallback_response(reason)</text>
+  <text x="678" y="354" text-anchor="middle" font-size="10" fill="#fde68a">controlled message, no crash</text>
+  <text x="678" y="370" text-anchor="middle" font-size="10" fill="#fde68a">provider_used=local_fallback</text>
+
+  <!-- Merge -->
+  <line x1="162" y1="376" x2="356" y2="422" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+  <line x1="420" y1="376" x2="420" y2="422" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+  <line x1="678" y1="376" x2="484" y2="422" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+
+  <!-- LLMResponse -->
+  <rect x="256" y="422" width="328" height="55" rx="10" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+  <text x="420" y="446" text-anchor="middle" font-size="13" font-weight="bold" fill="white">LLMResponse</text>
+  <text x="420" y="463" text-anchor="middle" font-size="10" fill="#94a3b8">content · input_tokens · output_tokens · cost_usd</text>
+
+  <line x1="420" y1="477" x2="420" y2="504" stroke="#64748b" stroke-width="1.8" marker-end="url(#a1)"/>
+
+  <!-- state.final_answer -->
+  <rect x="256" y="504" width="328" height="40" rx="8" fill="#f1f5f9" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="420" y="522" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e293b">state.final_answer = response.content</text>
+  <text x="420" y="537" text-anchor="middle" font-size="10" fill="#475569">run["output"] recorded in trace_run</text>
+
+  <!-- Langfuse side -->
+  <rect x="654" y="422" width="158" height="122" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+  <text x="733" y="443" text-anchor="middle" font-size="11" font-weight="bold" fill="#15803d">Langfuse</text>
+  <text x="733" y="460" text-anchor="middle" font-size="9" fill="#166534">• system_prompt</text>
+  <text x="733" y="475" text-anchor="middle" font-size="9" fill="#166534">• user_prompt</text>
+  <text x="733" y="490" text-anchor="middle" font-size="9" fill="#166534">• response.content</text>
+  <text x="733" y="505" text-anchor="middle" font-size="9" fill="#166534">• model · tokens · cost_usd</text>
+  <text x="733" y="520" text-anchor="middle" font-size="9" fill="#166534">• provider_used</text>
+  <text x="733" y="535" text-anchor="middle" font-size="9" fill="#166534">flush_traces() at end</text>
+  <line x1="584" y1="446" x2="654" y2="446" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#aGreen1)"/>
+
+  <!-- Out of scope -->
+  <rect x="68" y="560" width="574" height="24" rx="6" fill="#fef3c7" stroke="#f59e0b" stroke-width="1"/>
+  <text x="355" y="576" text-anchor="middle" font-size="10" fill="#92400e"><tspan font-weight="bold">Out of scope: </tspan>Multi-agent routing · Search · Benchmark · Writer/Analyst/Critic</text>
+
+  <defs>
+    <marker id="a1" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#64748b"/></marker>
+    <marker id="aGreen1" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#16a34a"/></marker>
+  </defs>
+</svg>

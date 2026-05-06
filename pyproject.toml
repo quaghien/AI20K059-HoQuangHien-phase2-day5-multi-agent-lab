@@ -22,9 +22,12 @@ dependencies = [
 [project.optional-dependencies]
 llm = [
   "openai>=1.40",
+  "anthropic>=0.40",
+  "tavily-python>=0.5.0",
   "langgraph>=0.2",
   "langchain-core>=0.2",
-  "langsmith>=0.1"
+  "langsmith>=0.1",
+  "langfuse>=2.44"
 ]
 dev = [
   "pytest>=8.2",

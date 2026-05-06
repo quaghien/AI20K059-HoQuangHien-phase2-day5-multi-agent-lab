@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="960" height="700" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="960" height="700" fill="#f8fafc" rx="12"/>
+  <text x="480" y="36" text-anchor="middle" font-size="18" font-weight="bold" fill="#1e293b">Sprint 4: Supervisor and LangGraph</text>
+  <text x="480" y="55" text-anchor="middle" font-size="12" fill="#64748b">SupervisorAgent (deterministic) · MultiAgentWorkflow · StateGraph · conditional_edges · guardrails</text>
+  <line x1="60" y1="65" x2="900" y2="65" stroke="#cbd5e1" stroke-width="1.5"/>
+
+  <!-- StateGraph boundary -->
+  <rect x="68" y="74" width="824" height="514" rx="12" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-dasharray="10,5"/>
+  <text x="86" y="92" font-size="10" fill="#7c3aed" font-weight="bold">StateGraph(ResearchState) — MultiAgentWorkflow.build() / .run()</text>
+
+  <!-- START -->
+  <ellipse cx="480" cy="114" rx="44" ry="18" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+  <text x="480" y="119" text-anchor="middle" font-size="11" font-weight="bold" fill="white">START</text>
+  <text x="480" y="132" text-anchor="middle" font-size="9" fill="#94a3b8">add_edge(START, "supervisor")</text>
+
+  <line x1="480" y1="150" x2="480" y2="182" stroke="#64748b" stroke-width="2" marker-end="url(#a4)"/>
+
+  <!-- Supervisor node -->
+  <rect x="290" y="182" width="380" height="108" rx="10" fill="#7c3aed" stroke="#6d28d9" stroke-width="2"/>
+  <text x="480" y="206" text-anchor="middle" font-size="13" font-weight="bold" fill="white">Supervisor — deterministic</text>
+  <text x="480" y="224" text-anchor="middle" font-size="10" fill="#e9d5ff">_determine_route(state):</text>
+  <text x="480" y="241" text-anchor="middle" font-size="10" fill="#c4b5fd">1. verification_queries? → researcher</text>
+  <text x="480" y="257" text-anchor="middle" font-size="10" fill="#c4b5fd">2. no sources/notes → researcher · 3. no analysis → analyst · 4. no critic → critic · 5. no answer → writer</text>
+  <text x="480" y="273" text-anchor="middle" font-size="10" fill="#a78bfa">guardrail: iteration ≥ max_iterations(6) → "done" + error · record_route() → route_history + iteration++</text>
+  <text x="480" y="285" text-anchor="middle" font-size="9" fill="#7c3aed">add_conditional_edges("supervisor", _route_from_state, {researcher,analyst,critic,writer,done})</text>
+
+  <!-- Branch arrows -->
+  <line x1="348" y1="290" x2="116" y2="362" stroke="#64748b" stroke-width="1.8" marker-end="url(#a4)"/>
+  <line x1="400" y1="290" x2="286" y2="362" stroke="#64748b" stroke-width="1.8" marker-end="url(#a4)"/>
+  <line x1="560" y1="290" x2="674" y2="362" stroke="#64748b" stroke-width="1.8" marker-end="url(#a4)"/>
+  <line x1="612" y1="290" x2="852" y2="362" stroke="#64748b" stroke-width="1.8" marker-end="url(#a4)"/>
+  <text x="152" y="350" font-size="9" fill="#7c3aed">researcher</text>
+  <text x="294" y="350" font-size="9" fill="#7c3aed">analyst</text>
+  <text x="640" y="350" font-size="9" fill="#7c3aed">critic</text>
+  <text x="826" y="350" font-size="9" fill="#7c3aed">writer</text>
+
+  <!-- Researcher -->
+  <rect x="68" y="362" width="196" height="72" rx="8" fill="#0891b2" stroke="#0e7490" stroke-width="2"/>
+  <text x="166" y="386" text-anchor="middle" font-size="12" font-weight="bold" fill="white">researcher</text>
+  <text x="166" y="403" text-anchor="middle" font-size="10" fill="#bae6fd">SearchClient (3-tier)</text>
+  <text x="166" y="419" text-anchor="middle" font-size="10" fill="#bae6fd">→ sources + research_notes</text>
+  <text x="166" y="432" text-anchor="middle" font-size="8" fill="#7dd3fc">add_edge("researcher","supervisor")</text>
+
+  <!-- Analyst -->
+  <rect x="274" y="362" width="196" height="72" rx="8" fill="#059669" stroke="#047857" stroke-width="2"/>
+  <text x="372" y="386" text-anchor="middle" font-size="12" font-weight="bold" fill="white">analyst</text>
+  <text x="372" y="403" text-anchor="middle" font-size="10" fill="#a7f3d0">LLMClient → analysis_notes</text>
+  <text x="372" y="419" text-anchor="middle" font-size="10" fill="#a7f3d0">status="analysis_ready"</text>
+  <text x="372" y="432" text-anchor="middle" font-size="8" fill="#6ee7b7">add_edge("analyst","supervisor")</text>
+
+  <!-- Critic -->
+  <rect x="576" y="362" width="196" height="72" rx="8" fill="#d97706" stroke="#b45309" stroke-width="2"/>
+  <text x="674" y="386" text-anchor="middle" font-size="12" font-weight="bold" fill="white">critic</text>
+  <text x="674" y="403" text-anchor="middle" font-size="10" fill="#fde68a">→ critic_notes</text>
+  <text x="674" y="419" text-anchor="middle" font-size="10" fill="#fde68a">VERIFY: → verification_queries</text>
+  <text x="674" y="432" text-anchor="middle" font-size="8" fill="#fef08a">add_edge("critic","supervisor")</text>
+
+  <!-- Writer -->
+  <rect x="782" y="362" width="102" height="72" rx="8" fill="#dc2626" stroke="#b91c1c" stroke-width="2"/>
+  <text x="833" y="386" text-anchor="middle" font-size="12" font-weight="bold" fill="white">writer</text>
+  <text x="833" y="403" text-anchor="middle" font-size="10" fill="#fecaca">→ final_answer</text>
+  <text x="833" y="419" text-anchor="middle" font-size="10" fill="#fecaca">next_agent=done</text>
+  <text x="833" y="432" text-anchor="middle" font-size="8" fill="#fca5a5">→supervisor</text>
+
+  <!-- Loop back -->
+  <line x1="166" y1="434" x2="334" y2="290" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aGray4)"/>
+  <line x1="372" y1="434" x2="400" y2="290" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aGray4)"/>
+  <line x1="674" y1="434" x2="558" y2="290" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aGray4)"/>
+  <line x1="833" y1="434" x2="614" y2="290" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aGray4)"/>
+
+  <!-- VERIFY re-loop -->
+  <path d="M 674 446 Q 430 502 200 446" stroke="#d97706" fill="none" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#aOrange4)"/>
+  <text x="408" y="498" text-anchor="middle" font-size="9" fill="#d97706" font-style="italic">VERIFY: → verification_queries → Supervisor re-routes to researcher</text>
+
+  <!-- done -->
+  <line x1="480" y1="290" x2="480" y2="510" stroke="#16a34a" stroke-width="2" marker-end="url(#aGreen4)"/>
+  <text x="492" y="496" font-size="10" fill="#16a34a">done</text>
+  <ellipse cx="480" cy="526" rx="44" ry="18" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+  <text x="480" y="531" text-anchor="middle" font-size="11" font-weight="bold" fill="white">END</text>
+
+  <!-- Guardrails -->
+  <rect x="68" y="604" width="400" height="70" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="268" y="623" text-anchor="middle" font-size="12" font-weight="bold" fill="#dc2626">Guardrails</text>
+  <text x="86" y="641" font-size="10" fill="#7f1d1d">• max_iterations=6: iteration ≥ max → done + error logged</text>
+  <text x="86" y="657" font-size="10" fill="#7f1d1d">• timeout_seconds=60 per LLM call · invalid route → fallback "done"</text>
+
+  <!-- Tracing -->
+  <rect x="492" y="604" width="400" height="70" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="692" y="623" text-anchor="middle" font-size="12" font-weight="bold" fill="#15803d">Route History &amp; Tracing</text>
+  <text x="510" y="641" font-size="10" fill="#166534">• state.record_route(route): route_history.append + iteration++</text>
+  <text x="510" y="657" font-size="10" fill="#166534">• trace_span("agent.supervisor") · AgentResult(routing_mode="deterministic")</text>
+
+  <defs>
+    <marker id="a4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#64748b"/></marker>
+    <marker id="aGray4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#94a3b8"/></marker>
+    <marker id="aGreen4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#16a34a"/></marker>
+    <marker id="aOrange4" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,10 3.5,0 7" fill="#d97706"/></marker>
+  </defs>
+</svg>

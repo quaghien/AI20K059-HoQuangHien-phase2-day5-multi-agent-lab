@@ -9,3 +9,11 @@ def test_state_records_route_and_trace() -> None:
     assert state.iteration == 1
     assert state.route_history == ["researcher"]
     assert state.trace[0]["name"] == "route"
+
+
+def test_state_defaults_support_reasoning_handoff() -> None:
+    state = ResearchState(request=ResearchQuery(query="Explain multi-agent systems"))
+    assert state.critic_notes is None
+    assert state.next_agent is None
+    assert state.status == "pending"
+    assert state.judge_score is None
